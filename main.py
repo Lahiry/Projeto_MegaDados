@@ -11,11 +11,56 @@ class Product(BaseModel):
     price: float
     quantity: int
 
-app = FastAPI()
+description = """
+BackendAyres API te ajuda a gerenciar melhor seu estoque. 🚀
 
-# update individual
-# delete individual
-# error handling
+## Itens
+
+Você poderá:
+
+* **Criar itens**.
+* **Atualizar itens**.
+* **Deletar itens**.
+* **Puxar itens**.
+"""
+
+app = FastAPI(
+    title="BackendAyres",
+    description=description,
+    version="0.0.1",
+    contact={
+        "name": "Raphael Lahiry e Rodrigo Coelho",
+    },
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+)
+
+tags_metadata = [
+    {
+        "name": "Get products",
+        "description": "Listagem de todos os produtos em estoque",
+    },
+    {
+        "name": "Get product",
+        "description": "Lista produto específico do estoque",
+    },
+    {
+        "name": "Create product",
+        "description": "Cria um produto no estoque",
+    },
+    {
+        "name": "Delete product",
+        "description": "Deleta um produto do estoque",
+    },
+    {
+        "name": "Update product",
+        "description": "Atualiza um produto no estoque",
+    },
+]
+
+# Auxiliar functions
 
 def verify_restrictions(product: Product, verify_product_exists: bool = True):
     if product.id < 0:
@@ -40,18 +85,20 @@ def save_product(product: Product):
         json.dump(products, f)
 
 
-@app.get("/products")
+# Routes
+
+@app.get("/products", tags=["Get products"], summary="Listagem de todos os produtos em estoque")
 async def get_products():
     return products
 
-@app.get("/product/{id_product}")
+@app.get("/product/{id_product}", tags=["Get product"], summary="Lista produto específico do estoque")
 async def get_product(id_product: int):
     for product in products:
         if product["id"] == id_product:
             return product
     raise HTTPException(status_code=404, detail="Product not found")
 
-@app.post("/product")
+@app.post("/product", tags=["Create product"], summary="Cria um produto no estoque")
 async def create_product(product: Product):
 
     verify_restrictions(product)
@@ -59,7 +106,7 @@ async def create_product(product: Product):
 
     return "Product created successfully"
 
-@app.patch("/product")
+@app.patch("/product", tags=["Update product"], summary="Atualiza um produto no estoque")
 async def update_product(product: Product):
 
     verify_restrictions(product, False)
@@ -78,7 +125,7 @@ async def update_product(product: Product):
 
     return "Product updated successfully"
 
-@app.delete("/product/{id_product}")
+@app.delete("/product/{id_product}", tags=["Delete product"], summary="Deleta um produto do estoque")
 async def delete_product(id_product: int):
 
     if id_product < 0:
