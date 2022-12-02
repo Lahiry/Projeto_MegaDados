@@ -120,7 +120,7 @@ async def update_product(product: Product):
             stock_product["quantity"] = update_product["quantity"]
             break
 
-    with open('products.json', 'w') as f:
+    with open('stock.json', 'w') as f:
         json.dump(products, f)
 
     return "Product updated successfully"
@@ -131,12 +131,13 @@ async def delete_product(id_product: int):
     if id_product < 0:
         raise HTTPException(status_code=400, detail="Id cannot be negative")
 
-    if id_product not in [product["id"] for product in products["products"]]:
+    if id_product not in [product["id"] for product in products]:
         raise HTTPException(status_code=400, detail="Product doens't exists")
 
     filtered_products = [product for product in products if product['id'] != id_product]
+    print(filtered_products)
 
-    with open('products.json', 'w') as f:
-        json.dump(filtered_products, f)
+    with open('stock.json', 'w') as f:
+        json.dump({"products": filtered_products}, f, separators=(',',': '), indent=4)
     
     return "Product deleted successfully"

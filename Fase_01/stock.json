@@ -1,1 +1,34 @@
-[{"id": 1, "name": "Starbucks Coffee", "price": 9.99, "quantity": 20}, {"id": 2, "name": "Coffee Mug", "price": 29.99, "quantity": 15}, {"id": 3, "name": "Nespresso Machine", "price": 300.0, "quantity": 5}, {"id": 4, "name": "Organic Coffee Beans", "price": 15.99, "quantity": 30}, {"id": 5, "name": "Brown Sugar Sachets", "price": 1.99, "quantity": 50}, {"id": 6, "name": "Cinnamon Roll", "price": 4.99, "quantity": 9}]
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Starbucks Coffee",
+            "price": 9.99,
+            "quantity": 20
+        },
+        {
+            "id": 2,
+            "name": "Coffee Mug",
+            "price": 29.99,
+            "quantity": 15
+        },
+        {
+            "id": 3,
+            "name": "Nespresso Machine",
+            "price": 300.0,
+            "quantity": 5
+        },
+        {
+            "id": 4,
+            "name": "Organic Coffee Beans",
+            "price": 15.99,
+            "quantity": 30
+        },
+        {
+            "id": 5,
+            "name": "Brown Sugar Sachets",
+            "price": 1.99,
+            "quantity": 50
+        }
+    ]
+}
