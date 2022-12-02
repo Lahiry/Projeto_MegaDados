@@ -1,9 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import json
-  
-f = open('stock.json')
-products = json.load(f)['products']
 
 class Product(BaseModel):
     id: int
@@ -63,6 +60,9 @@ tags_metadata = [
 # Auxiliar functions
 
 def verify_restrictions(product: Product, verify_product_exists: bool = True):
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
+
     if product.id < 0:
         raise HTTPException(status_code=400, detail="Id cannot be negative")
 
@@ -80,19 +80,27 @@ def verify_restrictions(product: Product, verify_product_exists: bool = True):
         raise HTTPException(status_code=400, detail="Name cannot be empty")
 
 def save_product(product: Product):
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
+
     products.append(product.dict())
     with open('stock.json', 'w') as f:
-        json.dump(products, f)
+        json.dump({"products": products}, f, separators=(',',': '), indent=4)
 
 
 # Routes
 
 @app.get("/products", tags=["Get products"], summary="Listagem de todos os produtos em estoque")
 async def get_products():
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
     return products
 
 @app.get("/product/{id_product}", tags=["Get product"], summary="Lista produto específico do estoque")
 async def get_product(id_product: int):
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
+
     for product in products:
         if product["id"] == id_product:
             return product
@@ -108,6 +116,8 @@ async def create_product(product: Product):
 
 @app.patch("/product", tags=["Update product"], summary="Atualiza um produto no estoque")
 async def update_product(product: Product):
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
 
     verify_restrictions(product, False)
 
@@ -121,12 +131,14 @@ async def update_product(product: Product):
             break
 
     with open('stock.json', 'w') as f:
-        json.dump(products, f)
+        json.dump({"products": products}, f, separators=(',',': '), indent=4)
 
     return "Product updated successfully"
 
 @app.delete("/product/{id_product}", tags=["Delete product"], summary="Deleta um produto do estoque")
 async def delete_product(id_product: int):
+    with open('stock.json', 'r') as f:
+        products = json.load(f)['products']
 
     if id_product < 0:
         raise HTTPException(status_code=400, detail="Id cannot be negative")
